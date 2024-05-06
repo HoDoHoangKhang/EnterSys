@@ -263,11 +263,11 @@ while ($row = $result->fetch_assoc()) {
 
         switch (this.value) {
             case 'month':
-                additionalInputsContainer.innerHTML = '<input class="my-2 py-1" type="month" id="month" name="month">';
+                additionalInputsContainer.innerHTML = '<input class="my-2 py-1" type="month" id="month" name="month" required>';
                 break;
             case 'quarter':
                 additionalInputsContainer.innerHTML = `
-                    <select id="quarter" name="quarter" class="my-2 py-1">
+                    <select id="quarter" name="quarter" class="my-2 py-1" required>
                     <option value="">Chọn quý</option>
                     <option value="Q1">Qúy 1</option>
                     <option value="Q2">Qúy 2</option>
