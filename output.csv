@@ -1,7 +1,7 @@
 "Mã Sản Phẩm","Tên Sản Phẩm","Tổng Số Lượng Nhập","Tổng Số Lượng Xuất","Tồn Kho"
-39,"Nike Air Max",17,9,8
-40,"Adidas Ultraboost",58,4,54
-41,"New Balance Fresh Foam",0,0,0
+39,"Nike Air Max",7,9,-2
+40,"Adidas Ultraboost",63,10,53
+41,"New Balance Fresh Foam",0,1,-1
 42,"Timberland đế cao",0,0,0
 43,"Dr. Martens búp bê",0,0,0
 44,"Puma RS-X",0,0,0
@@ -38,4 +38,4 @@
 75,"Converse Jack Purcell",0,0,0
 76,"Under Armour Charged Assert",0,0,0
 77,1,24,0,24
-78,"Puma BRD",70,0,70
+78,"Test cute",20,0,20

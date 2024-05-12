@@ -4,6 +4,8 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/HTTT-DN/object/sanpham.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/HTTT-DN/object/size.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/HTTT-DN/object/soluong.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/HTTT-DN/object/nhacungcap.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/HTTT-DN/object/khohang.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/HTTT-DN/object/khachhang.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/HTTT-DN/object/nhanhieu.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/HTTT-DN/object/taikhoan.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/HTTT-DN/object/nhanvien.php');
@@ -25,6 +27,9 @@ const DA_NHAN = 1;
 const DA_HUY = 2;
 const DA_XAC_NHAN = 1;
 const DANG_XU_LY = 0;
+const TRA_HANG_CHO_NHA_CUNG_CAP = 0;
+const XUAT_CHO_KHACH_HANG = 1;
+const CHUYEN_DEN_KHO_KHAC = 2;	
 
 // Lấy mảng tất cả sản phẩm
 function getProductList()
@@ -227,6 +232,28 @@ function getNewestMaChiTietPhieuNhap()
 	return $maChiTietPhieuNhap;
 }
 
+function getNewestMaPhieuXuat()
+{
+	$db = new Database();
+	$sql = "SELECT max(maPhieuXuat) + 1 as 'maPhieuXuat' FROM `phieuxuat`";
+	$kq = mysqli_query($db->getConnection(), $sql);
+	$row = mysqli_fetch_assoc($kq);
+	$maPhieuXuat = $row['maPhieuXuat'];
+	$db->disconnect();
+	return $maPhieuXuat;
+}
+
+function getNewestMaChiTietPhieuXuat()
+{
+	$db = new Database();
+	$sql = "SELECT max(maChiTietPhieuXuat) + 1 as 'maChiTietPhieuXuat' FROM `chitietphieuxuat`";
+	$kq = mysqli_query($db->getConnection(), $sql);
+	$row = mysqli_fetch_assoc($kq);
+	$maChiTietPhieuXuat = $row['maChiTietPhieuXuat'];
+	$db->disconnect();
+	return $maChiTietPhieuXuat;
+}
+
 function getTaiKhoanBy($taiKhoan)
 {
 	$db = new Database();
@@ -315,6 +342,32 @@ function tonTaiPhieuNhapCuaNhanVienTrongNgay($maNhanVien, $ngayNhap)
 	}
 }
 
+function tonTaiPhieuXuatCuaNhanVienTrongNgay($maNhanVien, $ngayXuat)
+{
+	$db = new Database();
+	$kq = mysqli_query($db->getConnection(), "SELECT * FROM `phieuxuat` WHERE maNhanVien = $maNhanVien AND ngayXuat = '$ngayXuat'");
+	$row = mysqli_fetch_assoc($kq);
+	if ($row) {
+		$phieuXuat = new PhieuXuat(
+			$row['maPhieuXuat'],
+			$row['maKhachHang'],
+			$row['maNhanVien'],
+			$row['tongTien'],
+			$row['ngayXuat'],
+			$row['tongSoLuong'],
+			$row['trangThai'],
+			$row['lyDo'],
+			$row['maNCC'],
+			$row['maKho']
+		);
+		$db->disconnect();
+		return $phieuXuat;
+	} else {
+		$db->disconnect();
+		return null;
+	}
+}
+
 function getPhieuNhapById($id)
 {
 	$db = new Database();
@@ -363,6 +416,20 @@ function isExistMaPhieuNhap($maPhieuNhap)
 {
 	$db = new Database();
 	$kq = mysqli_query($db->getConnection(), "SELECT * FROM `phieunhap` WHERE maPhieuNhap = $maPhieuNhap");
+	$row = mysqli_fetch_assoc($kq);
+	if ($row) {
+		$db->disconnect();
+		return true;
+	} else {
+		$db->disconnect();
+		return false;
+	}
+}
+
+function isExistMaPhieuXuat($maPhieuXuat)
+{
+	$db = new Database();
+	$kq = mysqli_query($db->getConnection(), "SELECT * FROM `phieuxuat` WHERE maPhieuXuat = $maPhieuXuat");
 	$row = mysqli_fetch_assoc($kq);
 	if ($row) {
 		$db->disconnect();
@@ -440,7 +507,10 @@ function getPhieuXuatById($id)
 			$row['tongTien'],
 			$row['ngayXuat'],
 			$row['tongSoLuong'],
-			$row['trangThai']
+			$row['trangThai'],
+			$row['lyDo'],
+			$row['maNCC'],
+			$row['maKho']
 		);
 		$db->disconnect();
 		return $phieuXuat;
@@ -463,7 +533,10 @@ function getPhieuXuatList()
 			$row['tongTien'],
 			$row['ngayXuat'],
 			$row['tongSoLuong'],
-			$row['trangThai']
+			$row['trangThai'],
+			$row['lyDo'],
+			$row['maNCC'],
+			$row['maKho']
 		);
 		$phieuXuatList[] = $phieuXuat;
 	}
@@ -612,4 +685,106 @@ function hienThiSanPhamAdmin($list)
 			'</tr>';
 	}
 	return $data;
+}
+
+function getKhoHangList() {
+	$db = new Database();
+	$kq = mysqli_query($db->getConnection(), "SELECT * FROM `khohang`");
+	$khoHangList = array();
+	while ($row = mysqli_fetch_assoc($kq)) {
+		$khoHang = new KhoHang(
+			$row['maKho'],
+			$row['ten'],
+			$row['diaChi'],
+			$row['sdt'],
+			$row['trangThai']
+		);
+		$khoHangList[] = $khoHang;
+	}
+	$db->disconnect();
+	return $khoHangList;
+}
+
+function getKhoHangById($id)
+{
+	$db = new Database();
+	$kq = mysqli_query($db->getConnection(), "SELECT * FROM `khohang` WHERE maKho = '" . $id . "'");
+	$row = mysqli_fetch_assoc($kq);
+	if ($row) {
+		$khoHang = new KhoHang(
+			$row['maKho'],
+			$row['ten'],
+			$row['diaChi'],
+			$row['sdt'],
+			$row['trangThai']
+		);
+		$db->disconnect();
+		return $khoHang;
+	} else {
+		$db->disconnect();
+		return null;
+	}
+}
+
+function getKhachHangList() {
+	$db = new Database();
+	$kq = mysqli_query($db->getConnection(), "SELECT * FROM `khohang`");
+	$khoHangList = array();
+	while ($row = mysqli_fetch_assoc($kq)) {
+		$khachHang = new KhachHang(
+			$row['id'],
+			$row['ten'],
+			$row['diaChi'],
+			$row['sdt']
+		);
+		$khachHangList[] = $khachHang;
+	}
+	$db->disconnect();
+	return $khoHangList;
+}
+
+function getKhachHangBySDT($sdt)
+{
+	$db = new Database();
+	$kq = mysqli_query($db->getConnection(), "SELECT * FROM `khachhang` WHERE sdt = '" . $sdt . "'");
+	$row = mysqli_fetch_assoc($kq);
+	if ($row) {
+		$khachHang = new KhachHang(
+			$row['id'],
+			$row['ten'],
+			$row['diaChi'],
+			$row['sdt']
+		);
+		$db->disconnect();
+		return $khachHang;
+	} else {
+		$db->disconnect();
+		return null;
+	}
+}
+
+function getNewestMaKhachHang()
+{
+	$db = new Database();
+	$sql = "SELECT max(id) + 1 as 'id' FROM `khachhang`";
+	$kq = mysqli_query($db->getConnection(), $sql);
+	$row = mysqli_fetch_assoc($kq);
+	$id = $row['id'];
+	$db->disconnect();
+	return $id;
+}
+
+function isExistSDTKhachHang($sdt)
+{
+	$db = new Database();
+	$sql = "SELECT * FROM `khachhang` WHERE sdt = '" . $sdt . "'";
+	$kq = mysqli_query($db->getConnection(), $sql);
+	$row = mysqli_fetch_assoc($kq);
+	if (is_null($row)) {
+		$db->disconnect();
+		return false;
+	} else {
+		$db->disconnect();
+		return true;
+	}
 }

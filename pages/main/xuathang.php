@@ -17,7 +17,7 @@
                       <th>Mã đơn hàng</th>
                       <th>Mã khách hàng</th>
                       <th>Mã nhân viên</th>
-                      <th>Ngày đặt</th>
+                      <th>Ngày xuất</th>
                       <th>Số lượng</th>
                       <th>Tổng tiền</th>
                       <th>Trạng thái</th>

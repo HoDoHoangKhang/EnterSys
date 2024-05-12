@@ -133,6 +133,19 @@ function checkAlert() {
             alertMessage('fail', 'Đổi trạng thái phiếu xuất thất bại');
         sessionStorage.removeItem('editTrangThaiPhieuXuat');
     }
+    if (sessionStorage.getItem('editTrangThaiPhieuXuat') !== null) {
+        if (sessionStorage.getItem('editTrangThaiPhieuXuat') == 'success')
+            alertMessage('success', 'Đổi trạng thái phiếu xuất thành công');
+        else if (sessionStorage.getItem('editTrangThaiPhieuXuat') == 'same1')
+            alertMessage('info', 'Phiếu xuất đã ở trạng thái đã xuất hàng!');
+        else if (sessionStorage.getItem('editTrangThaiPhieuXuat') == 'same0')
+            alertMessage('info', 'Phiếu xuất đã ở trạng thái chưa xuất hàng!');
+        else if (sessionStorage.getItem('editTrangThaiPhieuXuat') == 'fail')
+            alertMessage('fail', 'Đổi trạng thái phiếu xuất thất bại');
+        else if (sessionStorage.getItem('editTrangThaiPhieuXuat') == 'cannotChange') 
+            alertMessage('info', 'Không được đổi trạng thái của phiếu xuất này');
+        sessionStorage.removeItem('editTrangThaiPhieuXuat');
+    }
 }
 
 function changeMoneyToNum(money) {

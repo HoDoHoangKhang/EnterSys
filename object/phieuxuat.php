@@ -8,8 +8,11 @@ class PhieuXuat
     private $ngayXuat;
     private $tongSoLuong;
     private $trangThai;
+    private $lyDo;
+    private $maNCC;
+    private $maKho;
 
-    function __construct($maPhieuXuat, $maKhachHang, $maNhanVien, $tongTien, $ngayXuat, $tongSoLuong, $trangThai)
+    function __construct($maPhieuXuat, $maKhachHang, $maNhanVien, $tongTien, $ngayXuat, $tongSoLuong, $trangThai, $lyDo, $maNCC, $maKho)
     {
         $this->maPhieuXuat = $maPhieuXuat;
         $this->maKhachHang = $maKhachHang;
@@ -18,6 +21,9 @@ class PhieuXuat
         $this->ngayXuat = $ngayXuat;
         $this->tongSoLuong = $tongSoLuong;
         $this->trangThai = $trangThai;
+        $this->lyDo = $lyDo;
+        $this->maNCC = $maNCC;
+        $this->maKho = $maKho;
     }
 
     public function setMaPhieuXuat($maPhieuXuat)
@@ -85,4 +91,29 @@ class PhieuXuat
     public function getTrangThai() {
         return $this->trangThai;
     }
+
+    public function setMaNCC($maNCC) {
+        $this->maNCC = $maNCC;
+    }
+
+    public function setLyDo($lyDo) {
+        $this->lyDo = $lyDo;
+    }
+
+    public function getLyDo() {
+        return $this->lyDo;
+    }
+
+    public function getMaNCC() {
+        return $this->maNCC;
+    }
+
+    public function setMaKho($maKho) {
+        $this->maKho = $maKho;
+    }
+
+    public function getMaKho() {
+        return $this->maKho;
+    }
 }
+
